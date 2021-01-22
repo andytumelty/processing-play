@@ -97,23 +97,26 @@ void draw() {
 
     cam_s = cam_s - (drag_ratio * (float(pmouseX - mouseX) / width));
     cam_t = cam_t - (drag_ratio * (float(pmouseY - mouseY) / width));
-
-    cam_x = (cam_radius * cos(cam_s) * sin(cam_t)) + (width/2);
-    cam_y = - cam_radius * cos(cam_t) + (height/2);
-    cam_z = (cam_radius * sin(cam_s) * sin(cam_t));
-    
-    // println(cam_s*180/PI, cam_t*180/PI, cam_x, cam_y, cam_z);
-  
-    // if we rotate vertically past 180deg flip the camera so y is
-    // in the direction we'd expect
-    float upY = pow(-1, 1 + abs(int(cam_t / PI)));
-
-    camera(
-      cam_x, cam_y, cam_z, // camera position
-      width/2.0, height/2.0, 0,  // eye centre
-      0, upY, 0 // upX, upY, upZ
-    );
   }
+
+  // always position the camera: the mouseWheel event may have tripped
+  // TODO can we use a flag for this instead to save needing to always
+  // run this?
+  cam_x = (cam_radius * cos(cam_s) * sin(cam_t)) + (width/2);
+  cam_y = - cam_radius * cos(cam_t) + (height/2);
+  cam_z = (cam_radius * sin(cam_s) * sin(cam_t));
+  
+  // println(cam_s*180/PI, cam_t*180/PI, cam_x, cam_y, cam_z);
+
+  // if we rotate vertically past 180deg flip the camera so y is
+  // in the direction we'd expect
+  float upY = pow(-1, 1 + abs(int(cam_t / PI)));
+
+  camera(
+    cam_x, cam_y, cam_z, // camera position
+    width/2.0, height/2.0, 0,  // eye centre
+    0, upY, 0 // upX, upY, upZ
+  );
 
   // draw a containing box
   stroke(0, 10);
@@ -130,7 +133,7 @@ void draw() {
   if (grow && n_balls < balls.length){
     // show 1 more ball next frame
     n_balls++;
-    println(n_balls);
+    println("n_balls", n_balls);
   }
 }
 
@@ -139,6 +142,11 @@ void keyPressed() {
   if (key == ' '){
     grow = ! grow;
   }
+}
+
+void mouseWheel(MouseEvent event) {
+  cam_radius += event.getCount();
+  // println(cam_radius);
 }
 
 class Ball {
