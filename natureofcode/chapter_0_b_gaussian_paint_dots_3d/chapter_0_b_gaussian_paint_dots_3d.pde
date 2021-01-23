@@ -37,11 +37,17 @@ void setup() {
   size(500, 500, P3D);
   frameRate(30);
  
-  // this is the default camera z location
+  /*
+  // this is equivalent to the default camera location
   cam_radius = (height/2.0) / tan(PI*30.0 / 180.0);
-  // the default camera location, equivalent to x = 0 + width/2, y = 0 + width/2
   cam_s = 3*PI/2;
   cam_t = 3*PI/2;
+  */
+  
+  // a slightly nicer starting offset
+  cam_radius = 485;
+  cam_s = 4.3;
+  cam_t = 5;
 
   drag_ratio = PI;
 
