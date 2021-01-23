@@ -33,6 +33,7 @@ boolean grow = true;
 
 boolean record = false;
 boolean spin = false;
+float zoom = 1;
 
 void setup() {
   size(1000, 1000, P3D);
@@ -147,6 +148,8 @@ void draw() {
   if (spin) {
     cam_s -= 0.005;
   }
+
+  cam_radius *= zoom;
   
   println("framerate", frameRate);
 }
@@ -159,6 +162,12 @@ void keyPressed() {
     spin = !spin;
   } else if (key == 'r' || key == 'R') {
     record = !record;
+  } else if (key == 'i' || key == 'I') {
+    zoom += 0.001;
+  } else if (key == 'o' || key == 'O') {
+    zoom = 1;
+  } else if (key == 'p' || key == 'P') {
+    zoom -= 0.001;
   }
 }
 
