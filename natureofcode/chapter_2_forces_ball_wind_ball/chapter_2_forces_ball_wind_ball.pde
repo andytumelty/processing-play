@@ -1,5 +1,4 @@
 Mover movers[] = new Mover[10];
-PVector gravity;
 float t = random(100);
 boolean play = true;
 
@@ -11,8 +10,6 @@ void setup() {
     float size = random(5, 100);
     movers[i] = new Mover(50, 50, size, bounce);
   }
-  // negative y is "up"
-  gravity = new PVector(0, 1);
 }
 
 void draw() {
@@ -24,6 +21,8 @@ void draw() {
   
     for (int i = 0; i < movers.length; i++) {
       Mover mover = movers[i];
+      // gravity scales with mass
+      PVector gravity = new PVector(0, 0.1*mover.mass);
       mover.applyForce(gravity);
       mover.applyForce(wind);
       mover.checkEdges();
