@@ -16,14 +16,14 @@ float cam_z;
 float drag_ratio = PI;
 
 // the ball radius
-int radius = 6;
+int radius = 12;
 
 int pos_sd;
 int rgb_sd;
 
 // the "bounding" (not really, randomGaussian has no theoretical limit) box. More
 // useful as a point of reference for rotating the camera.
-int box_size = 300;
+int box_size = 600;
 
 // the number of balls to show. Increments once per iteration,
 // if grow == true
@@ -35,7 +35,7 @@ boolean record = false;
 boolean spin = false;
 
 void setup() {
-  size(500, 500, P3D);
+  size(1000, 1000, P3D);
   frameRate(30);
  
   /*
@@ -46,7 +46,7 @@ void setup() {
   */
   
   // a slightly nicer starting offset
-  cam_radius = 485;
+  cam_radius = width*0.97;
   cam_s = 4.3;
   cam_t = 5;
 
