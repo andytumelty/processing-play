@@ -32,6 +32,7 @@ int n_balls = 1;
 boolean grow = true;
 
 boolean record = false;
+boolean spin = false;
 
 void setup() {
   size(500, 500, P3D);
@@ -142,12 +143,22 @@ void draw() {
   if (record) {
      saveFrame("output/frame_####.png"); 
   }
+  
+  if (spin) {
+    cam_s -= 0.005;
+  }
+  
+  println("framerate", frameRate);
 }
 
 void keyPressed() {
   // pause/play the animation with spacebar
   if (key == ' '){
-    grow = ! grow;
+    grow = !grow;
+  } else if (key == 's' || key == 'S') {
+    spin = !spin;
+  } else if (key == 'r' || key == 'R') {
+    record = !record;
   }
 }
 
