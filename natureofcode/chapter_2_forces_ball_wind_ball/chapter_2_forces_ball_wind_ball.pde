@@ -1,13 +1,26 @@
 Mover movers[] = new Mover[10];
 float t = random(100);
 boolean play = true;
+HashMap friction_areas[] = new HashMap[2];
+
+float c = 0.05;
+
+float f1_min_x = 100;
+float f1_max_x = 250;
+float f1_c = -0.5;
+color f1_col = color(161, 198, 255);
+
+float f2_min_x = 350;
+float f2_max_x = 450;
+float f2_c = 0.5;
+color f2_col = color(255, 164, 161);
 
 void setup() {
   size(640, 360);
-  float bounce = 0.8;
+  float bounce = 0.9;
   
   for (int i = 0; i < movers.length; i++) {
-    float size = random(5, 100);
+    float size = random(10, 50);
     movers[i] = new Mover(50, 50, size, bounce);
   }
 }
@@ -15,12 +28,34 @@ void setup() {
 void draw() {
   if (play){
     background(255);
+  
+    noStroke();
+    fill(f1_col);
+    rect(f1_min_x, 0, f1_max_x-f1_min_x, height);
+    fill(f2_col);
+    rect(f2_min_x, 0, f2_max_x-f2_min_x, height);
 
-    PVector wind = new PVector((noise(t)-0.2)*random(0.6,1), 0);
+    PVector wind = new PVector((noise(t)-0.2)*random(0.1,0.3), 0);
     t++;
   
     for (int i = 0; i < movers.length; i++) {
       Mover mover = movers[i];
+      
+      // FIXME I don't agree with this -- friction shouldn't always be
+      // applied
+      // co-efficient of friction
+      PVector friction = mover.velocity.copy();
+      friction.mult(-1);
+      friction.normalize();
+      if (mover.location.x >= f1_min_x && mover.location.x <= f1_max_x){
+        friction.mult(f1_c);
+      } else if (mover.location.x >= f2_min_x && mover.location.x <= f2_max_x){
+        friction.mult(f2_c);
+      } else {
+        friction.mult(c);
+      }
+      mover.applyForce(friction);
+      
       // gravity scales with mass
       PVector gravity = new PVector(0, 0.1*mover.mass);
       mover.applyForce(gravity);
