@@ -2,47 +2,47 @@ Ball[] balls;
 
 // how far away from the origin the camera is
 float cam_radius;
-// the angle in radians around the z-axis
+// the angle in radians around the y-axis
 float cam_s;
-// the angle in radians down from z-axis
+// the angle in radians down from y-axis
 float cam_t;
-// how much a drag across the screen will rotate the camera
-float drag_ratio;
 
 float cam_x;
 float cam_y;
 float cam_z;
 
-int radius;
+// how much a drag across the screen will rotate the camera
+// dragging for a full width/height changes the rotation by 180deg
+float drag_ratio = PI;
+
+// the ball radius
+int radius = 6;
 
 int pos_sd;
 int rgb_sd;
 
-int n_balls;
+// the "bounding" (not really, randomGaussian has no theoretical limit) box. More
+// useful as a point of reference for rotating the camera.
+int box_size = 300;
 
-int box_size;
+// the number of balls to show. Increments once per iteration,
+// if grow == true
+int n_balls = 1;
+// whether to show more balls on the next frame. Can be toggled with spacebar.
+boolean grow = true;
 
-boolean grow;
+boolean record = false;
 
 void setup() {
   size(500, 500, P3D);
   frameRate(30);
-
-  // the ball size
-  radius = 6;
-  // whether to show more balls on the next frame. Can be toggled with spacebar.
-  grow = true;
-  
-  // the "bounding" (not really, randomGaussian has no theoretical limit) box. More
-  // useful as a point of reference for rotating the camera.
-  box_size = 300;
+ 
   // this is the default camera z location
   cam_radius = (height/2.0) / tan(PI*30.0 / 180.0);
   // the default camera location, equivalent to x = 0 + width/2, y = 0 + width/2
   cam_s = 3*PI/2;
   cam_t = 3*PI/2;
 
-  // dragging for a full width/height changes the rotation by 180deg
   drag_ratio = PI;
 
   // standard deviations for position and colour
@@ -63,9 +63,6 @@ void setup() {
     int z = int(randomGaussian() * pos_sd);
     balls[n] = new Ball(radius, x, y, z, r, g, b, 50);
   }
-  
-  // the number of balls to show. Increments once per iteration, if draw == true
-  n_balls = 1;
 }
 
 void draw() {
@@ -134,6 +131,10 @@ void draw() {
     // show 1 more ball next frame
     n_balls++;
     println("n_balls", n_balls);
+  }
+  
+  if (record) {
+     saveFrame("output/frame_####.png"); 
   }
 }
 
