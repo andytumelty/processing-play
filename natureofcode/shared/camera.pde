@@ -15,7 +15,7 @@ float drag_ratio = PI;
 
 // the "bounding" (not really, randomGaussian has no theoretical limit) box. More
 // useful as a point of reference for rotating the camera.
-float box_size;
+float cam_box_size;
 
 // overload for default args
 void setupCamera(){
@@ -23,19 +23,19 @@ void setupCamera(){
   setupCamera(false);
 }
 void setupCamera(boolean offset){
+  // this is the default processing camera radius
+  cam_radius = (height/2.0) / tan(PI*30.0 / 180.0);
   if (offset){    
     // a slightly nicer starting offset
-    cam_radius = width*0.97;
+    // cam_radius = width*0.97;
     cam_s = 4.3;
     cam_t = 5;
   } else {
     // this is equivalent to the default camera location
-    cam_radius = (height/2.0) / tan(PI*30.0 / 180.0);
     cam_s = 3*PI/2;
     cam_t = 3*PI/2;
   }
-  
-  box_size = width * 0.6;
+  cam_box_size = width * 0.6;
 }
 
 void drawCamera() {
@@ -92,7 +92,7 @@ void drawCamera(boolean draw_bounding_box, boolean draw_origin) {
     noFill();
     pushMatrix();
     translate(width/2, height/2, 0);
-    box(box_size);
+    box(cam_box_size);
     popMatrix();
   }
   

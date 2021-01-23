@@ -1,66 +1,79 @@
-int radius;
+int ball_radius;
+color ball_colour;
 
-// TODO change to use vectors
-float x;
-float y;
-float z;
-PVector l;
+PVector ball_location;
+PVector ball_velocity;
 
-float v_x;
-float v_y;
-float v_z;
-PVector v;
-
-int max_z;
-PVector bounds;
-
-color c;
+PVector box_size;
+PVector max_bounds;
+PVector min_bounds;
 
 void setup() {
   size(800, 600, P3D);
   frameRate(30);
 
-  // the box is 800x600x600
-  max_z = 600;
-  radius = 20;
+  setupCamera(true);
 
-  x = width/2;
-  y = height/2;
-  z = 0;
+  ball_radius = 20;
+  ball_colour = color(random(255), random(255), random(255));
 
-  v_x = 3;
-  v_y = 2;
-  v_z = 1;
+  // start the ball in the middle of the canvas
+  ball_location = new PVector (width/2, height/2, 0);
+  ball_velocity = new PVector(
+    random(0.5, 4),
+    random(0.5, 4),
+    random(0.5, 4)
+  );
 
-  c = color(random(255), random(255), random(255));
+  // where the "walls" are
+  box_size = new PVector(400, 300, 300);
+
+  // pre-calculate where the max-min co-ordinates are for ball
+  min_bounds = new PVector(
+    width/2 - box_size.x/2 + ball_radius,
+    height/2 - box_size.y/2 + ball_radius,
+    0 - box_size.z/2 + ball_radius
+  );
+  max_bounds = new PVector(
+    width/2 + box_size.x/2 - ball_radius,
+    height/2 + box_size.y/2 - ball_radius,
+    0 + box_size.z/2 - ball_radius
+  );
+
 }
 
 void draw() {
-  // TODO smaller bounds so you can see it
-  // TODO rotate the view so it's on a slight angle
-  // TODO draw box around the bounds
-  if ((x > width) || (x < 0)) {
-    v_x = v_x * -1;
-  }
-  if ((y > height) || (y < 0)) {
-    v_y = v_y * -1;
-  }
-  if ((z > max_z/2) || (z < -max_z/2)) {
-    v_z = v_z * -1;
-  }
-
-  background(200);
+  background(240);
   lights();
+  
+  drawCamera();
+  
+  // draw the bounding box
+  noFill();
+  stroke(0, 10);
+  pushMatrix();
+  translate(width/2, height/2, 0);
+  box(box_size.x, box_size.y, box_size.z);
+  popMatrix();
 
   noStroke();
-  fill(c);
-
+  fill(ball_colour);
   pushMatrix();
-  translate(x, y, z);
-  sphere(radius);
+  translate(ball_location.x, ball_location.y, ball_location.z);
+  sphere(ball_radius);
   popMatrix();
   
-  x += v_x;
-  y += v_y;
-  z += v_z;
+  if ((ball_location.x > max_bounds.x) || (ball_location.x < min_bounds.x)) {
+    ball_velocity.x *= -1;
+  }
+  if ((ball_location.y > max_bounds.y) || (ball_location.y < min_bounds.y)) {
+    ball_velocity.y *= -1;
+  }
+  if ((ball_location.z > max_bounds.z) || (ball_location.z < min_bounds.z)) {
+    ball_velocity.z *= -1;
+  }
+
+  ball_location.add(ball_velocity);
+  
+  println(frameRate);
 }
