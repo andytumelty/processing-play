@@ -1,5 +1,5 @@
-Mover movers[] = new Mover[2];
-Attractor attractors[] = new Attractor[2];
+Mover movers[] = new Mover[10];
+Attractor attractors[] = new Attractor[3];
 
 boolean play = true;
 float c = 0.01;
@@ -7,7 +7,7 @@ float c = 0.01;
 Attractor dragging;
 
 void setup() {
-  size(640, 360);
+  size(800, 800);
   float bounce = 0.9;
   
   for (int i = 0; i < movers.length; i++) {
@@ -18,13 +18,16 @@ void setup() {
       size,
       bounce
     );
+    // setup movers with a random acceleration
+    movers[i].applyForce(new PVector(random(2)-1,random(2)-1));
+    movers[i].update();
   }
   
   for (int i = 0; i < attractors.length; i++) {
     float size = random(10, 50);
     attractors[i] = new Attractor(
-      random(50, width-50),
-      random(50, height-50),
+      random(100, width-100),
+      random(100, height-100),
       size
     );
   }
@@ -58,7 +61,7 @@ void draw() {
       mover.display();
     }
   }
-  println(frameRate);
+  // println(frameRate);
 }
 
 void keyPressed(){
@@ -163,16 +166,6 @@ class Mover {
   //  //}
   //}
   
-  
-  //void drag(Liquid l) {
-  //  float speed = velocity.mag();
-  //  float dragMagnitude = l.c * speed * speed;
-  //  PVector drag = velocity.copy();
-  //  drag.mult(-1);
-  //  drag.normalize();
-  //  drag.mult(dragMagnitude);
-  //  applyForce(drag);
-  //}
   boolean isInside(float x, float y){
     // return whether the given co-ordinates are within the mover's area
     PVector offset = PVector.sub(
@@ -182,25 +175,6 @@ class Mover {
    return offset.mag() <= size;
   }
 }
-
-//class Liquid {
-//  float x, y, w, h;
-//  float c;
-
-//  Liquid(float x_, float y_, float w_, float h_, float c_){
-//    x = x_;
-//    y = y_;
-//    w = w_;
-//    h = h_;
-//    c = c_;
-//  }
-  
-//  void display() {
-//    noStroke();
-//    fill(199, 224, 255);
-//    rect(x, y, w, h);
-//  }
-//}
 
 class Attractor {
   float size;
@@ -219,10 +193,10 @@ class Attractor {
     location = new PVector(x_, y_);
     size = size_;
     // attractors are denser than movers
-    mass = size/5;
+    mass = size/2;
     
     // fairly arbitrary gravitational constant
-    G = 0.5;
+    G = 1;
   }
   
   void display() {
@@ -231,12 +205,12 @@ class Attractor {
     fill(colour_fill, 80);
     ellipse(location.x, location.y, size, size);
   }
-  
+
   PVector attract(Mover mover) {
     // F = ((G * m1 * m2)/(r^2))*r_unit
     PVector f = PVector.sub(location, mover.location);
     // limit distance to prevent super huge or super small forces
-    float r = constrain(f.mag(), 5, 50);
+    float r = constrain(f.mag(), 5, 100);
     f.normalize();
     f.mult((G * mass * mover.mass)/(r * r));
     return f;
