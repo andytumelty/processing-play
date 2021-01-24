@@ -9,9 +9,9 @@ Attractor dragging;
 void setup() {
   size(800, 800);
   float bounce = 0.9;
-  
+
   for (int i = 0; i < movers.length; i++) {
-    float size = random(10, 30);
+    float size = random(5, 20);
     movers[i] = new Mover(
       random(50, width-50),
       random(50, height-50),
@@ -24,7 +24,7 @@ void setup() {
   }
   
   for (int i = 0; i < attractors.length; i++) {
-    float size = random(10, 50);
+    float size = random(30, 60);
     attractors[i] = new Attractor(
       random(100, width-100),
       random(100, height-100),
@@ -36,12 +36,33 @@ void setup() {
 void draw() {
   if (play){
     background(255);
+
     if (mousePressed && dragging != null){
       // use diff between mouseX and pmouseX to moce the
       // object as the mouse probably isn't dragging from
       // the centre, so e.g. dragging.location.x != mouseX 
       dragging.location.x += mouseX - pmouseX;
       dragging.location.y += mouseY - pmouseY;
+    }
+    
+    // draw the force vector field
+    float spacing = 40;
+    for (float w = spacing; w < width; w += spacing){
+      for (float h = spacing; h < height; h += spacing){
+        PVector arrow_vector = new PVector(0, 0);
+        for (int i = 0; i < attractors.length; i++) {
+          Attractor a = attractors[i];
+          // use a fake mover to generate the attract force arrow
+          Mover m = new Mover(w, h, 10, 1);
+          PVector f = a.attract(m);
+          arrow_vector.add(f);
+        }
+        arrow_vector.mult(5000);
+        arrow_vector.limit(spacing/2);
+        // println(arrow_vector);
+        Arrow arrow = new Arrow(w, h, arrow_vector);
+        arrow.display();
+      }
     }
 
     for (int i = 0; i < attractors.length; i++) {
@@ -61,7 +82,7 @@ void draw() {
       mover.display();
     }
   }
-  // println(frameRate);
+  println(frameRate);
 }
 
 void keyPressed(){
@@ -223,5 +244,44 @@ class Attractor {
       new PVector(x, y)
     );
    return offset.mag() <= size;
+  }
+}
+
+class Arrow {
+  PVector location;
+  // TODO better name for this?
+  PVector vector;
+  
+  Arrow(float x_, float y_, PVector vector_) {
+    location = new PVector(x_, y_);
+    vector = vector_;
+  }
+  
+  void display() {
+    strokeWeight(1);
+    stroke(100);
+    line(
+      location.x,
+      location.y,
+      location.x + vector.x,
+      location.y + vector.y
+    );
+    PVector head = vector.copy();
+    head.normalize();
+    head.mult(-5);
+    head.rotate(-PI/4);
+    line(
+      location.x + vector.x,
+      location.y + vector.y,
+      location.x + vector.x + head.x,
+      location.y + vector.y + head.y
+    );
+    head.rotate(PI/2);
+    line(
+      location.x + vector.x,
+      location.y + vector.y,
+      location.x + vector.x + head.x,
+      location.y + vector.y + head.y
+    );
   }
 }
