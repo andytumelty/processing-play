@@ -4,6 +4,8 @@ Attractor attractors[] = new Attractor[2];
 boolean play = true;
 float c = 0.01;
 
+Attractor dragging;
+
 void setup() {
   size(640, 360);
   float bounce = 0.9;
@@ -31,6 +33,13 @@ void setup() {
 void draw() {
   if (play){
     background(255);
+    if (mousePressed && dragging != null){
+      // use diff between mouseX and pmouseX to moce the
+      // object as the mouse probably isn't dragging from
+      // the centre, so e.g. dragging.location.x != mouseX 
+      dragging.location.x += mouseX - pmouseX;
+      dragging.location.y += mouseY - pmouseY;
+    }
 
     for (int i = 0; i < attractors.length; i++) {
       Attractor attractor = attractors[i];
@@ -56,6 +65,22 @@ void keyPressed(){
  if (key == ' '){
    play = !play;
  }
+}
+
+void mousePressed(){
+  for (int i = 0; i < attractors.length; i++) {
+    Attractor a = attractors[i];
+    if(a.isInside(mouseX, mouseY)){
+      dragging = a;
+      // if we've found an attractor we're dragging
+      // we don't need to check any more
+      return;
+    }
+  }
+}
+
+void mouseReleased(){
+  dragging = null;
 }
 
 class Mover {
@@ -138,13 +163,6 @@ class Mover {
   //  //}
   //}
   
-  //boolean isInside(Liquid l) {
-  //  if (location.x>l.x && location.x<l.x+l.w && location.y>l.y && location.y<l.y+l.h){
-  //    return true;
-  //  } else {
-  //    return false;
-  //  }
-  //}
   
   //void drag(Liquid l) {
   //  float speed = velocity.mag();
@@ -155,6 +173,14 @@ class Mover {
   //  drag.mult(dragMagnitude);
   //  applyForce(drag);
   //}
+  boolean isInside(float x, float y){
+    // return whether the given co-ordinates are within the mover's area
+    PVector offset = PVector.sub(
+      location,
+      new PVector(x, y)
+    );
+   return offset.mag() <= size;
+  }
 }
 
 //class Liquid {
@@ -214,5 +240,14 @@ class Attractor {
     f.normalize();
     f.mult((G * mass * mover.mass)/(r * r));
     return f;
+  }
+
+  boolean isInside(float x, float y){
+    // return whether the given co-ordinates are within the objects's area
+    PVector offset = PVector.sub(
+      location,
+      new PVector(x, y)
+    );
+   return offset.mag() <= size;
   }
 }
