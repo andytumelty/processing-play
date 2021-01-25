@@ -7,7 +7,7 @@ function setup() {
 }
 
 function draw() {
-    background(250);
+    background(253);
     lights();
     drawCamera(true);
 
@@ -15,5 +15,7 @@ function draw() {
     fill(255,0,0);
     sphere(10);
 
-    document.getElementById('framerate').innerText = frameRate();
+    if (frameCount % 30 == 0){
+        document.getElementById('framerate').innerText = frameRate().toFixed(2);
+    }
 }

@@ -1,6 +1,9 @@
 // FIXME this is a layover from the processing to p5.js migration: do we really
 // need these to be global vars?
 
+// TODO better keys, see keyPressed in gaussian_paint_dots_3d
+// TODO capturing key presses here without needing to override keyPressed?
+
 // how far away from the origin the camera is
 var cam_radius;
 // the angle in radians around the y-axis
@@ -37,7 +40,7 @@ function drawCamera(draw_bounding_box, draw_origin) {
     // this is the default processing camera radius...
     cam_radius = (height/2.0) / Math.tan(PI*30.0 / 180.0);
     // ... but it's a bit close, so make it a bit bigger
-    cam_radius *= 1.5;
+    cam_radius *= 1.2;
   }
 
   // this is equivalent to the default camera location: front on
@@ -94,7 +97,7 @@ function drawCamera(draw_bounding_box, draw_origin) {
   if (draw_bounding_box){
     // draw a containing box. Useful for orientating oneself in abstract
     // or blank cavases when rotating.
-    stroke(0, 0.2*255);
+    stroke(0, 0.3*255);
     noFill();
     push();
     translate(0, 0, 0);

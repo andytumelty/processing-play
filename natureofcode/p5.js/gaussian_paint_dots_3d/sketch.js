@@ -22,9 +22,14 @@ function setup() {
   var canvas = createCanvas(800, 600, WEBGL);
   canvas.parent('sketch');
 
+  // a slightly nicer starting offset
+  cam_s = 4.3;
+  cam_t = 5;
+
   // standard deviations for position and colour
   pos_sd = width/10;
   rgb_sd = 20;
+
 
   // Pre-generate 100 balls
   // We need to persist the ball locations and color so we can redraw their
@@ -42,7 +47,7 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  background(253);
   // lights();
   drawCamera(true);
   // orbitControl(4, 4, 0.1);
@@ -62,32 +67,34 @@ function draw() {
   //    saveFrame("output/frame_####.png");
   // }
 
-  // JS migration note: camera control replaced with orbitControl()
-  // if (spin) {
-  //   cam_s -= 0.005;
-  // }
-  // cam_radius *= zoom;
+  if (spin) {
+    cam_s -= 0.005;
+  }
+  cam_radius *= zoom;
 
   if (frameCount % 30 == 0){
-    document.getElementById('framerate').innerText = frameRate();
-  }
+    document.getElementById('framerate').innerText = frameRate().toFixed(2);
+}
 }
 
 function keyPressed() {
   // pause/play the animation with spacebar
   if (key == ' '){
     grow = !grow;
-  // JS migration note: camera control replaced with orbitControl();
-  // } else if (key == 's' || key == 'S') {
-  //   spin = !spin;
+  // JS migration note: should camera control be replaced with orbitControl()?
+  // TODO can these keys be migrated to within camera.js?
+  // TODO better keys here, wasd for manual panning, capitals for continued,
+  // q and e for zoom?
+  } else if (key == 's' || key == 'S') {
+    spin = !spin;
+  } else if (key == 'i' || key == 'I') {
+    zoom += 0.001;
+  } else if (key == 'o' || key == 'O') {
+    zoom = 1;
+  } else if (key == 'p' || key == 'P') {
+    zoom -= 0.001;
   // } else if (key == 'r' || key == 'R') {
   //   record = !record;
-  // } else if (key == 'i' || key == 'I') {
-  //   zoom += 0.001;
-  // } else if (key == 'o' || key == 'O') {
-  //   zoom = 1;
-  // } else if (key == 'p' || key == 'P') {
-  //   zoom -= 0.001;
   }
 }
 
