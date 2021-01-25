@@ -113,3 +113,8 @@ function drawCamera(draw_bounding_box, draw_origin) {
     strokeWeight(1);
   }
 }
+
+function touchMoved() {
+  // prevent default
+  return false;
+}
