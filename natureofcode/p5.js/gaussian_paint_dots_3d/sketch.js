@@ -3,7 +3,7 @@ p5.disableFriendlyErrors = true; // disables FES
 var balls = [];
 
 // the ball radius
-var radius = 12;
+var radius;
 
 var pos_sd;
 var rgb_sd;
@@ -19,8 +19,10 @@ var spin = true;
 var zoom = 1;
 
 function setup() {
-  var canvas = createCanvas(800, 600, WEBGL);
+  var canvas = createCanvas(600, 600, WEBGL);
   canvas.parent('sketch');
+
+  radius = width/60;
 
   // a slightly nicer starting offset
   cam_s = 4.3;

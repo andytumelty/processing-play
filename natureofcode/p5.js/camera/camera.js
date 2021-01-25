@@ -40,7 +40,7 @@ function drawCamera(draw_bounding_box, draw_origin) {
     // this is the default processing camera radius...
     cam_radius = (height/2.0) / Math.tan(PI*30.0 / 180.0);
     // ... but it's a bit close, so make it a bit bigger
-    cam_radius *= 1.2;
+    // cam_radius *= 1.2;
   }
 
   // this is equivalent to the default camera location: front on
