@@ -1,7 +1,8 @@
 let mover;
 
 function setup() {
-    var canvas = createCanvas(600, 600);
+    let s = min(600, window.innerWidth, window.innerHeight);
+    var canvas = createCanvas(s, s);
     canvas.parent('sketch');
     mover = new Mover(width/2, height/2);
 }
@@ -35,9 +36,9 @@ class Mover {
         this.maxVelocity = 2;
 
         // the triangle base
-        this.size_base = 8;
+        this.size_base = width/75;
         // the triangle height
-        this.size_height = 14;
+        this.size_height = width/40;
     }
 
     update(){

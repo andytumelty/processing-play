@@ -1,5 +1,6 @@
 function setup() {
-    var canvas = createCanvas(600, 600, WEBGL);
+    let s = min(600, window.innerWidth, window.innerHeight);
+    var canvas = createCanvas(s, s, WEBGL);
     canvas.parent('sketch');
     // a slightly nicer starting offset
     cam_s = 4.3;

@@ -1,7 +1,8 @@
 let baton;
 
 function setup() {
-    var canvas = createCanvas(600, 600);
+    let s = min(600, window.innerWidth, window.innerHeight);
+    var canvas = createCanvas(s, s);
     canvas.parent('sketch');
     baton = new Baton(width/2, height/2);
 }
@@ -34,9 +35,9 @@ class Baton {
         this.aVelocityMax = 0.2;
 
         // the baton line length
-        this.length = 100;
+        this.length = width/6;
         // the radii of the two capping circles
-        this.radius = 10;
+        this.radius = this.length/10;
     }
 
     update(){
