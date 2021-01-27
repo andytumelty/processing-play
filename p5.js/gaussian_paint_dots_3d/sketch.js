@@ -19,7 +19,8 @@ var spin = true;
 var zoom = 1;
 
 function setup() {
-  var canvas = createCanvas(600, 600, WEBGL);
+  let s = min(600, window.innerWidth, window.innerHeight);
+  var canvas = createCanvas(s, s, WEBGL);
   canvas.parent('sketch');
 
   radius = width/60;
